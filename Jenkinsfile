@@ -1,18 +1,16 @@
 node('JDK8') {
-    stage('git-clone') {
-        // build steps
-        git branch: '*/sprint1_develop', url: 'https://github.com/vishnuvardhan8522/game-of-life.git'
+    stage('SourceCode') {
+        // get the code from git repo on the branch sprint1_develop
+        git branch: 'sprint1_develop', url: 'https://github.com/vishnuvardhan8522/game-of-life.git'
     }
-    stage('maven-package') {
-        //maven package on shell
-        sh 'maven package'
 
+    stage('Build the code') {
+        sh 'mvn package'
     }
-    stage('archiving the artifacts') {
-        archiveArtifacts artifacts: 'target/*.jar', followSymlinks: false
 
+    stage('Archiving and Test Results') {
+        junit '**/surefire-reports/*.xml'
+        archiveArtifacts artifacts: '**/*.war', followSymlinks: false
     }
-    stage('archiving the artifacts') {
-    junit '**/surefire-reports/*.xml'
-    }
+
 }
